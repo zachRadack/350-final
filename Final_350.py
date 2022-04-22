@@ -34,9 +34,8 @@ for i in range(0,len(tableData),4):
 #print(BigTableData)
 
 
-df1 = pd.DataFrame(data= BigTableData, columns=["Years","Prices", ])
-#df1 = df1.reindex(index=df1.index[::-1])
-df1[3] = df1[3].replace({'\$':''}, regex=True).astype(float)
+df1 = pd.DataFrame(data= BigTableData, columns=["Years","Prices","CPI","CPI_coffee_price" ])
+df1["CPI_coffee_price"] = df1["CPI_coffee_price"].replace({'\$':''}, regex=True).astype(float)
 df1 = df1[:][:-6]
 #print(df1)
 
@@ -45,7 +44,7 @@ df1 = df1[:][:-6]
 fname1 = "homocide.csv"
 df2 = pd.read_csv(fname1)
 df2.columns = [c.replace(' ', '_') for c in df2.columns]
-print(df2)
+#print(df2)
 df2_years = df2["report_year"].drop_duplicates(keep='first')
 
 
@@ -75,6 +74,12 @@ for i, j in df2.iterrows():
 df2_condensed = pd.DataFrame(data=statslist1,columns=["report_year",'homicides_per_capita',"rapes_per_capita"])        
 df2_condensed = df2_condensed[5:]
 
+
+
+DF_Comparison =  pd.DataFrame(data=df2_condensed["homicides_per_capita"])
+i = df1["CPI_coffee_price"]
+DF_Comparison =DF_Comparison.join(i)
+print(DF_Comparison)
 
 fig1 = px.scatter(df1, x = 0,y = 3, trendline="ols", title="Coffee prices inflation accounted")
 fig1.show()
